@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>NeuralNetwork</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@0.13.0"> </script>
+    <script src="index.js"></script>
+</head>
+
+<body>
+    <table class="table" border="1">
+        <thead>
+            <tr>
+                <th>Input</th>
+                <th>Output</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>
+                    <canvas id="input_t"></canvas>
+                    <br>
+                    <input id="file" type="file" name="files[]" onChange="readURL(this,'input_t',10);" />
+                </td>
+                <td>
+                    <canvas id="out_t"></canvas>
+                    <br>
+                    <input id="file" type="file" name="files[]" onChange="readURL(this,'out_t',10);" />
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <canvas id="input_d"></canvas>
+                    <br>
+                    <input id="file" type="file" name="files[]" onChange="readURL(this,'input_d',2);" />
+                </td>
+                <td>
+                    <canvas id="out_d"></canvas>
+                    <br>
+                    <label id="loss"></label>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <center>
+                        <button onclick="init(0)">Sample</button>
+                        <button onclick="trainloop()">Train_Make</button>
+                        <button onclick="stop()">Stop</button>
+                    </center>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</body>
+
+</html>
