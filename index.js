@@ -81,7 +81,7 @@ function readURL(input, imagetag) {
 function update() {
     in_batch_count = parseInt(document.getElementById('inbatch').value);
     batch_count = parseInt(document.getElementById('outbatch').value);
-    smallernum = 1 / parseInt(document.getElementById('scaler').value);
+    smallernum = 1 / parseFloat(document.getElementById('scaler').value);
 }
 
 function trainloop() {
