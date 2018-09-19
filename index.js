@@ -1,6 +1,8 @@
 
-var smallernum = 10;
+var smallernum = 1;
 var loop = true;
+var batch_count = 200;
+var in_batch_count = 200;
 
 let model = tf.sequential();
 
@@ -34,6 +36,9 @@ model.compile({
 });
 
 function stop() {
+    document.getElementById('stop-btn').style.display = 'none';
+    document.getElementById('sample-btn').style.display = 'inline';
+    document.getElementById('run-btn').style.display = 'inline';
     loop = false;
 }
 
@@ -55,7 +60,7 @@ function init(index) {
     img.src = "image.jpg";
 }
 
-function readURL(input, imagetag, size) {
+function readURL(input, imagetag) {
     if (input.files && input.files[0]) {
         var reader = new FileReader();
         reader.onload = function (e) {
@@ -63,17 +68,29 @@ function readURL(input, imagetag, size) {
             var ctx = myCanvas.getContext('2d');
             var img = new Image;
             img.onload = function () {
-                myCanvas.width = img.width / size;
-                myCanvas.height = img.height / size;
-                ctx.drawImage(img, 0, 0, img.width / size, img.height / size);
+                myCanvas.width = img.width / smallernum;
+                myCanvas.height = img.height / smallernum;
+                ctx.drawImage(img, 0, 0, img.width / smallernum, img.height / smallernum);
             };
             img.src = e.target.result;
         };
         reader.readAsDataURL(input.files[0]);
     }
 }
+
+function update() {
+    in_batch_count = parseInt(document.getElementById('inbatch').value);
+    batch_count = parseInt(document.getElementById('outbatch').value);
+    smallernum = 1 / parseInt(document.getElementById('scaler').value);
+}
+
 function trainloop() {
     loop = true;
+
+    document.getElementById('stop-btn').style.display = 'inline';
+    document.getElementById('sample-btn').style.display = 'none';
+    document.getElementById('run-btn').style.display = 'none';
+
     var input_t = document.getElementById('input_t');
     var out_t = document.getElementById('out_t');
     var input_t_ctx = input_t.getContext("2d");
@@ -87,55 +104,59 @@ function trainloop() {
     out_d.width = input_d.width
     out_d.height = input_d.height
 
-    let imageins_array = [];
-    let imageouts_array = [];
 
-    for (let index = 0; index < input_t.width; index++) {
-        for (let index1 = 0; index1 < input_t.height; index1++) {
-
-            var x = (index / input_t.width);
-            var y = (index1 / input_t.height);
-
-            var pixelData1 = input_t_ctx.getImageData(index, index1, 1, 1).data;
+    var index_t = 1;
+    var train = async function () {
+        var rowcolors = [];
+        var rowcolors_2 = [];
+        for (let index1 = 0; index1 < in_batch_count; index1++) {
+            var pos = getIJ(input_d.width, input_d.height, index_t + index1);
+            var pixelData1 = input_t_ctx.getImageData(pos[0], pos[1], 1, 1).data;
             var r1 = (pixelData1[0] / 255);
             var g1 = (pixelData1[1] / 255);
             var b1 = (pixelData1[2] / 255);
             var a1 = (pixelData1[3] / 255);
+            rowcolors.push([r1, g1, b1, a1]);
 
-            var pixelData2 = out_t_ctx.getImageData(index, index1, 1, 1).data;
+            var pixelData2 = out_t_ctx.getImageData(pos[0], pos[1], 1, 1).data;
             var r2 = (pixelData2[0] / 255);
             var g2 = (pixelData2[1] / 255);
             var b2 = (pixelData2[2] / 255);
             var a2 = (pixelData2[3] / 255);
 
-            imageins_array.push([r1, g1, b1, a1]);
-            imageouts_array.push([r2, g2, b2, a2]);
-
+            rowcolors_2.push([r1, g1, b1, a1]);
         }
-    }
 
-    const ins = tf.tensor2d(imageins_array);
-    const outs = tf.tensor2d(imageouts_array);
+        const ins = tf.tensor2d(rowcolors);
+        const outs = tf.tensor2d(rowcolors_2);
 
 
-    var train = async function () {
         const resp = await model.fit(ins, outs, {
-            epochs: 10
+            epochs: 1
         });
+
         rate = resp.history.loss[0];
         document.getElementById('loss').innerText = resp.history.loss[0];
-        //console.log(resp.history.loss[0]);
+
+        ins.dispose();
+        outs.dispose();
+
+        index_t += in_batch_count;
+        if (index_t > maxcount) {
+            index_t = 1;
+        }
+
     };
 
-    var backtrain = true;
-    var trainit = function(){
-        if(backtrain)train().then(() => {
-            backtrain = true;
+
+    var trainit = function () {
+        if (loop) train().then(() => {
+            trainit();
         });
-        backtrain = false;
     }
 
-    var batch_count = 200;
+    trainit();
+
     var index = 1;
     var maxcount = input_d.width * input_d.height;
     var run = function () {
@@ -166,10 +187,10 @@ function trainloop() {
         });
         ins_d.dispose();
         index += batch_count;
+        document.getElementById('pp').innerText = Math.round((index / maxcount) * 100) + "%";
         if (index > maxcount) {
-            if(loop) {
+            if (loop) {
                 out_d_ctx.clearRect(0, 0, input_d.width, input_d.height);
-                trainit();
             }
             index = 1;
         }
