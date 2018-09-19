@@ -124,7 +124,7 @@ function trainloop() {
             var b2 = (pixelData2[2] / 255);
             var a2 = (pixelData2[3] / 255);
 
-            rowcolors_2.push([r1, g1, b1, a1]);
+            rowcolors_2.push([r2, g2, b2, a2]);
         }
 
         const ins = tf.tensor2d(rowcolors);
