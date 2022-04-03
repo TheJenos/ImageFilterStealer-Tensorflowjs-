@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>NeuralNetwork</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+    integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous" />
+  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+    integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+    crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"
+    integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
+    crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"
+    integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
+    crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@0.13.0"></script>
+  <script src="color.js"></script>
+</head>
+
+<body>
+  <div class="container">
+    <div class="jumbotron jumbotron-fluid">
+      <div class="container">
+        <h1 class="display-3">Color Shade Generator [Tensorflow.Js]</h1>
+        <p class="lead">Learn the color shade from tailwind and create shades for your color.</p>
+      </div>
+    </div>
+
+    Loss rate : <label id="loss">0.0</label> <br/> <br/>
+
+    Color input : <input type="color" id="color" value="#6366f1" />
+    <hr>
+
+    <button class="btn btn-success ml-1" id="run-btn" onclick="trainloop()">Run</button>
+    <button class="btn btn-danger ml-1" style="display: none" id="stop-btn" onclick="stop()">Stop</button>
+
+    <hr>
+
+    <table border="1">
+      <tr>
+        <td width="80" height="80" id="50_COLOR" />
+        <td width="80" height="80" id="100_COLOR" />
+        <td width="80" height="80" id="200_COLOR" />
+        <td width="80" height="80" id="300_COLOR" />
+        <td width="80" height="80" id="400_COLOR" />
+        <td width="80" height="80" id="500_COLOR" />
+        <td width="80" height="80" id="600_COLOR" />
+        <td width="80" height="80" id="700_COLOR" />
+        <td width="80" height="80" id="800_COLOR" />
+        <td width="80" height="80" id="900_COLOR" />
+      </tr>
+      <tr>
+        <td width="80" height="80" id="50" />
+        <td width="80" height="80" id="100" />
+        <td width="80" height="80" id="200" />
+        <td width="80" height="80" id="300" />
+        <td width="80" height="80" id="400" />
+        <td width="80" height="80" id="500" />
+        <td width="80" height="80" id="600" />
+        <td width="80" height="80" id="700" />
+        <td width="80" height="80" id="800" />
+        <td width="80" height="80" id="900" />
+      </tr>
+    </table>
+  </div>
+</body>
+
+</html>
