@@ -1,7 +1,4 @@
-var smallernum = 1;
 var loop = true;
-var batch_count = 200;
-var in_batch_count = 200;
 
 let model = tf.sequential();
 
@@ -16,6 +13,16 @@ const hiddenLayer1 = tf.layers.dense({
     activation: 'relu'
 });
 model.add(hiddenLayer1);
+const hiddenLayer2 = tf.layers.dense({
+    units: 10,
+    activation: 'relu'
+});
+model.add(hiddenLayer2);
+const hiddenLayer3 = tf.layers.dense({
+    units: 10,
+    activation: 'relu'
+});
+model.add(hiddenLayer3);
 const outputLayer = tf.layers.dense({
     units: 3,
     activation: 'sigmoid'
@@ -132,8 +139,8 @@ function trainloop() {
 
     var index = 1;
     var run = function () {
-
         var baseColorAndShade = [];
+        colorIWant = colorInput.value;
         const baseColor = hexToRgb(colorIWant);
         for (const shade of shades) {
             const normalizedInputRed = baseColor.r / 255;
@@ -162,7 +169,7 @@ function trainloop() {
                 const cell = document.getElementById(shade + "_COLOR");
                 const cellText = document.getElementById(shade);
                 cell.style.backgroundColor = hex;
-                cellText.innerText = hex;
+                cellText.innerHTML = shade+"<br/>"+hex+"<br/>"+red+" "+green+" "+blue;
 
                 offset += 3;
             }
@@ -172,7 +179,6 @@ function trainloop() {
 
         ins_d.dispose();
 
-        index += batch_count;
         if (loop || index != 1) setTimeout(run, 10);
     }
 
