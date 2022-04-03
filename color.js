@@ -8,18 +8,18 @@ const hiddenLayer = tf.layers.dense({
     activation: 'relu'
 });
 model.add(hiddenLayer);
-const hiddenLayer1 = tf.layers.dense({
-    units: 10,
-    activation: 'relu'
-});
-model.add(hiddenLayer1);
-const hiddenLayer2 = tf.layers.dense({
-    units: 10,
-    activation: 'relu'
-});
-model.add(hiddenLayer2);
+// const hiddenLayer1 = tf.layers.dense({
+//     units: 10,
+//     activation: 'relu'
+// });
+// model.add(hiddenLayer1);
+// const hiddenLayer2 = tf.layers.dense({
+//     units: 10,
+//     activation: 'relu'
+// });
+// model.add(hiddenLayer2);
 const hiddenLayer3 = tf.layers.dense({
-    units: 10,
+    units: 30,
     activation: 'relu'
 });
 model.add(hiddenLayer3);
@@ -29,7 +29,7 @@ const outputLayer = tf.layers.dense({
 });
 model.add(outputLayer);
 
-const optimizer = tf.train.adam(0.01);
+const optimizer = tf.train.adam(0.0001);
 
 model.compile({
     optimizer: optimizer,
@@ -80,6 +80,10 @@ function stop() {
     document.getElementById('stop-btn').style.display = 'none';
     document.getElementById('run-btn').style.display = 'inline';
     loop = false;
+}
+
+function download() {
+    model.save('downloads://color-model');
 }
 
 function trainloop() {
@@ -141,6 +145,9 @@ function trainloop() {
     var run = function () {
         var baseColorAndShade = [];
         colorIWant = colorInput.value;
+
+        document.getElementById('color_text').innerText = colorIWant;
+
         const baseColor = hexToRgb(colorIWant);
         for (const shade of shades) {
             const normalizedInputRed = baseColor.r / 255;
